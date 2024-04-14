@@ -1,0 +1,27 @@
+{block content}
+	<h1>Movies</h1>
+
+	<table class="movies">
+		<thead>
+		<tr>
+			<th>id</th>
+			<th>title</th>
+			<th>year</th>
+			<th></th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr n:foreach="$movies as $movie" class="movie">
+			<td class="id">{$movie->id}</td>
+
+			<td class="title"><a n:href="Movie:show $movie->id">{$movie->title}</a></td>
+
+			<td class="year">{$movie->year}</td>
+
+			<td class="actions"><a n:href="Movie:edit $movie->id">EDIT</a> <a n:href="Movie:delete $movie->id">DELETE</a></td>
+		</tr>
+		</tbody>
+	</table>
+
+	<a n:href="Movie:create">Add movie</a>
+{/block}

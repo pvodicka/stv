@@ -1,0 +1,47 @@
+services:
+    stv-db:
+        container_name: stv-db
+        restart: always
+        image: thecodingmachine/mysql:8.0-v2
+        command: [ --character-set-server=utf8mb4, --collation-server=utf8mb4_unicode_ci, --innodb-file-per-table=1 ]
+        environment:
+            - MYSQL_ROOT_PASSWORD=ROOT
+            - MYSQL_DATABASE=stv
+            - MYSQL_USER=stv
+            - MYSQL_PASSWORD=stv
+        networks:
+            - stv_internal
+
+    stv-adminer:
+        container_name: stv-adminer
+        image: adminer
+        ports:
+            - 8181:8080
+        networks:
+            - stv_internal
+
+    stv-php:
+        image: thecodingmachine/php:8.3-v4-apache
+        container_name: stv-php
+        volumes:
+            - .:/var/www/html:cached
+            - ./vendor:/var/www/html/vendor # for DEV if you want to have vendor local (for IDE)
+            - ./var/cache:/var/www/html/var/cache
+        environment:
+            APACHE_DOCUMENT_ROOT: www/
+            PHP_IDE_CONFIG: "serverName=localhost"
+            COMPOSER_HOME: /var/www/html
+            PHP_DEBUG: 1
+            XDEBUG_MODE: coverage
+            PHP_EXTENSION_XDEBUG: 1
+        ports:
+            - 81:80
+        networks:
+            - stv_internal
+
+volumes:
+    stv-database:
+
+networks:
+    stv_internal:
+        name: stv_internal
